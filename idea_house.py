@@ -135,6 +135,7 @@ def fig(figure_key):
 
 
 if __name__ == "__main__":
+    print('Hello World')
     with app.app_context():
         data = IdeaData()
 
