@@ -72,6 +72,16 @@ class IdeaData():
         else:
             return None
 
+    def get_user_info(self, id):
+        c = self._get_db().cursor()
+        c.execute("SELECT username, email FROM UserProfiles WHERE id = ?", (id,))
+        r = c.fetchone()
+        #If the user doesn't exist, the result will be None
+        if r is not None:
+            return r[0],r[1]
+        else:
+            return None
+
     def register_user(self, user, pw, email):
         db = self._get_db()
         c = db.cursor()

@@ -86,7 +86,9 @@ def about():
 
 @app.route("/profil")
 def profil():
-    return my_render('profil.html')
+    id = get_user_id()
+    name,email = data.get_user_info(id)
+    return my_render('profil.html', username = name, email = email)
 
 @app.route("/contact")
 def contact():
