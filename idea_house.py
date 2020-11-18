@@ -124,6 +124,18 @@ def login_user():
         session.pop('currentuser', None)
         return my_render('login.html', success = False)
 
+#Tilføjelse af måledata i DATABASE!
+@app.route('/opret_data')
+def opret_data():
+    return my_render('opret_data.html', titel='opret data')
+
+@app.route("/nydata", methods=['POST'])
+def nydata():
+    text = request.form['idea']
+    userid = get_user_id()
+    data.register_new_idea(text, userid)
+    return redirect("/visideer")
+
 @app.route('/fig/<figure_key>')
 def fig(figure_key):
     plt.title(figure_key)

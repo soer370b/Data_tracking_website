@@ -105,8 +105,6 @@ class IdeaData():
             return False
         return db_pw == pw
 
-
-
     def _create_db_tables(self):
         db = self._get_db()
         #try:
@@ -135,3 +133,10 @@ class IdeaData():
 
         db.commit()
         return 'Database tables created'
+#Funktion som laver string om til en datatype 
+    def tryeval(val):
+      try:
+        val = ast.literal_eval(val)
+      except ValueError:
+        pass
+      return val
