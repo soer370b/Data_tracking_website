@@ -46,6 +46,7 @@ def get_user_id():
 def home():
     return my_render('home.html')
 
+
 @app.route("/nyide", methods=['POST'])
 def nyide():
     text = request.form['idea']
@@ -82,6 +83,10 @@ def logout():
 @app.route("/about")
 def about():
     return my_render('about.html', title='Om idéhuset')
+
+@app.route("/profil")
+def profil():
+    return my_render('profil.html')
 
 @app.route("/contact")
 def contact():
