@@ -8,12 +8,13 @@ from flask import url_for
 import matplotlib.pyplot as plt
 
 
-from idea_datalayer import IdeaData
+from idea_datalayer import IdeaData, Data_Collectaion
 
 app = Flask(__name__)
 app.secret_key = 'very secret string'
 
 data = None
+data_from_data = None
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -131,10 +132,24 @@ def opret_data():
 
 @app.route("/nydata", methods=['POST'])
 def nydata():
-    text = request.form['idea']
+    text = request.form['data']
     userid = get_user_id()
-    data.register_new_idea(text, userid)
+    data_from_data.register_new_data(text, userid)
     return redirect("/visideer")
+
+@app.route("/visdata", methods=['GET'])
+def visdata():
+    if 'currentuser' in session:
+        id = get_user_id()
+        print(id)
+        if 'id' in request.args:
+            print('in 145')
+            data_from_data = data_from_data.get_data_list(session['currentuser'], id)#dataid = request.args['id']
+        else:
+            data_from_data = data_from_data.get_data_list(session['currentuser'], id)
+    else:
+        data_from_data = []
+    return my_render("vis_data.html", data = data_from_data)
 
 @app.route('/fig/<figure_key>')
 def fig(figure_key):
@@ -150,5 +165,7 @@ if __name__ == "__main__":
     print('Hello World')
     with app.app_context():
         data = IdeaData()
+        data_from_data = Data_Collectaion()
+
 
     app.run(debug=True)
