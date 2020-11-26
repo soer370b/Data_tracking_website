@@ -150,6 +150,7 @@ def visdata():
             data_from_data = data_from_data.get_data_list(session['currentuser'], id)
     else:
         data_from_data = []
+    print(data_from_data)
     return my_render("vis_data.html", data = data_from_data)
 
 @app.route('/fig/<figure_key>')
@@ -160,7 +161,6 @@ def fig(figure_key):
     plt.savefig(img)
     img.seek(0)
     return send_file(img, mimetype='image/png')
-
 
 if __name__ == "__main__":
     print('Hello World')

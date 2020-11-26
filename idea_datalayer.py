@@ -42,6 +42,7 @@ class IdeaData():
             c.execute("SELECT idea FROM Ideas WHERE id = ?", ideaid)
             t = c.fetchone()
             print("Idéen er: {}".format(t[0]))
+            print(t)
             c.execute("""SELECT Ideas.id, idea, timestamp, UserProfiles.username FROM Ideas JOIN UserProfiles ON Ideas.userid = UserProfiles.id WHERE idea LIKE ?""", (t[0],))
         else:
             c.execute("""SELECT Ideas.id, idea, timestamp, UserProfiles.username FROM Ideas JOIN UserProfiles ON Ideas.userid = UserProfiles.id WHERE userid = ?""",(userid,))
@@ -210,10 +211,14 @@ class Data_Collectaion():
             c.execute("SELECT Data FROM data WHERE id = ?", (dataid,))
             t = c.fetchone()
             print("Data er: {}".format(t[0]))
+            # print(t)
             c.execute("""SELECT Data.id, data, timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE data LIKE ?""", (t[0],))
         else:
             c.execute("""SELECT Data.id, data, timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE userid = ?""",(userid,))
-        idea_list = []
+        data_list = []
+        q = 1
         for i in c:
-            idea_list.append({'id':i[0], 'text':i[1], 'date':i[2], 'user': i[3]})
-        return idea_list
+            q = q =+ 1
+            data_list.append({'id':i[0], 'text':i[1], 'date':i[2], 'user': i[3]})
+            print('Data listen er i {} gennemløb'.format(t))
+        return data_list
