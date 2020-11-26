@@ -4,6 +4,7 @@ import sqlite3
 class IdeaData():
 
     def __init__(self):
+        print("id")
         self.DATABASE = 'ideahouse.db'
 
         self._create_db_tables()
@@ -153,6 +154,7 @@ class IdeaData():
 class Data_Collectaion():
 
     def __init__(self):
+        print("dc")
         self.DATABASE = 'Data.db'
         self._create_db_tables()
         c = self._get_db().cursor()
@@ -163,8 +165,8 @@ class Data_Collectaion():
             print(u)
 
     def _get_db(self):
-        db = g.get('_database', None)
-        print('Første {}'.format(db))
+        db = g.get('_database2', None)
+        print('Anden {}'.format(db))
         if db is None:
             db = g._databdase = sqlite3.connect(self.DATABASE)
             print(db)
@@ -179,24 +181,6 @@ class Data_Collectaion():
         #    print('Fejl ved sletning af tabeller.')
         c = db.cursor()
         try:
-            c.execute("""CREATE TABLE UserProfiles (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT,
-                email TEXT,
-                password TEXT);""")
-        except Exception as e:
-            print(e)
-
-        try:
-            c.execute("""CREATE TABLE Ideas (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                userid INTEGER,
-                idea TEXT,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);""")
-        except Exception as e:
-            print(e)
-
-        try:
             c.execute("""CREATE TABLE Data (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 userid INTEGER,
@@ -209,7 +193,7 @@ class Data_Collectaion():
         return 'Database tables created'
 
     def close_connection(self):
-        db = getattr(g, '_database', None)
+        db = getattr(g, '_database2', None)
         if db is not None:
             db.close()
 
@@ -223,7 +207,7 @@ class Data_Collectaion():
         db = self._get_db()
         c = db.cursor()
         if dataid is not None:
-            c.execute("SELECT idea FROM Ideas WHERE id = ?", dataid)
+            c.execute("SELECT Data FROM data WHERE id = ?", (dataid,))
             t = c.fetchone()
             print("Data er: {}".format(t[0]))
             c.execute("""SELECT Data.id, data, timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE data LIKE ?""", (t[0],))

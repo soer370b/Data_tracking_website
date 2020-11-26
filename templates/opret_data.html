@@ -2,7 +2,7 @@
 {% block content %}
 {% if loggedin == True %}
 <div class="form-group">
-  <form class="form-control" action="/nyide" method="post">
+  <form class="form-control" action="/nydata" method="post">
     <label class="form-control-static" for="text">Opret data:</label>
     <textarea class="form-control" rows="5" id="text" name="data"></textarea>
     <button class="form-control" type="submit" name="button">Send</button>

@@ -19,6 +19,7 @@ data_from_data = None
 @app.teardown_appcontext
 def close_connection(exception):
     data.close_connection()
+    data_from_data.close_connection()
 
 """
 Denne funktion sørger for at pakke den template, der skal vises,
@@ -135,16 +136,16 @@ def nydata():
     text = request.form['data']
     userid = get_user_id()
     data_from_data.register_new_data(text, userid)
-    return redirect("/visideer")
+    return redirect("/visdata")
 
 @app.route("/visdata", methods=['GET'])
 def visdata():
     if 'currentuser' in session:
+        data_from_data = Data_Collectaion()
         id = get_user_id()
         print(id)
         if 'id' in request.args:
-            print('in 145')
-            data_from_data = data_from_data.get_data_list(session['currentuser'], id)#dataid = request.args['id']
+            data_from_data = data_from_data.get_data_list(session['currentuser'], id, dataid = request.args['id'])#
         else:
             data_from_data = data_from_data.get_data_list(session['currentuser'], id)
     else:
@@ -165,7 +166,9 @@ if __name__ == "__main__":
     print('Hello World')
     with app.app_context():
         data = IdeaData()
+        print('data print: {}'.format(data))
         data_from_data = Data_Collectaion()
+        print('data_from_data print: {}'.format(data_from_data))
 
 
     app.run(debug=True)
