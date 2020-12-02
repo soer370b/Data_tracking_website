@@ -11,16 +11,16 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
     {% if title %}
-        <title>Webserveren - {{ title }}</title>
+        <title>DataCollect - {{ title }}</title>
     {% else %}
-        <title>Webserveren</title>
+        <title>DataCollect</title>
     {% endif %}
 </head>
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Webserveren</a>
+          <a class="navbar-brand mr-4" href="/">DataCollect</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -36,8 +36,8 @@
                 <a class="nav-item nav-link" href="/logout">Log ud</a>
               {% else %}
                 <a class="nav-item nav-link" href="/login">Login</a>
+                <a class="nav-item nav-link" href="/register">Opret bruger</a>
               {% endif %}
-              <a class="nav-item nav-link" href="/register">Opret bruger</a>
             </div>
           </div>
         </div>
@@ -54,6 +54,7 @@
             <p class='text-muted'>Vælg en funktion
               <ul class="list-group">
                 <li class="list-group-item list-group-item-light"><a class="nav-item nav-link" href="/home">Home</a></li>
+                <li class="list-group-item list-group-item-light"><a class="nav-item nav-link" href="/visideer">Min data</a></li>
                 <li class="list-group-item list-group-item-light"><a class="nav-item nav-link" href="/profil">Min profil</a></li>
                 <li class="list-group-item list-group-item-light"><a class="nav-item nav-link" href="/opret_data">Opret måledata</a></li>
               </ul>
