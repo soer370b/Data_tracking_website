@@ -87,7 +87,6 @@ def about():
 @app.route("/profil")
 def profil():
     id = get_user_id()
-
     if get_login_status():
         name,email = data.get_user_info(id)
         return my_render('profil.html', username = name, email = email)
