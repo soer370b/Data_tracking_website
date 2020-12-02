@@ -5,6 +5,7 @@ from flask import render_template
 from flask import session
 from flask import redirect
 from flask import url_for
+import io
 import matplotlib.pyplot as plt
 
 
@@ -136,6 +137,7 @@ def nydata():
     text = request.form['data']
     userid = get_user_id()
     data_from_data.register_new_data(text, userid)
+    print('Data som bliver gemt: {}'.format(text))
     return redirect("/visdata")
 
 @app.route("/visdata", methods=['GET'])
@@ -145,7 +147,7 @@ def visdata():
         id = get_user_id()
         print(id)
         if 'id' in request.args:
-            data_from_data = data_from_data.get_data_list(session['currentuser'], id, dataid = request.args['id'])#
+            data_from_data = data_from_data.get_data_list(session['currentuser'], id, dataid = request.args['id'])
         else:
             data_from_data = data_from_data.get_data_list(session['currentuser'], id)
     else:

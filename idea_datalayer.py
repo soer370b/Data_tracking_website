@@ -133,14 +133,14 @@ class IdeaData():
         except Exception as e:
             print(e)
 
-        try:
-            c.execute("""CREATE TABLE Data (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                userid INTEGER,
-                data TEXT,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);""")
-        except Exception as e:
-            print(e)
+        # try:
+        #     c.execute("""CREATE TABLE Data (
+        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #         userid INTEGER,
+        #         data TEXT,
+        #         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);""")
+        # except Exception as e:
+        #     print(e)
 
         db.commit()
         return 'Database tables created'
@@ -156,7 +156,7 @@ class Data_Collectaion():
 
     def __init__(self):
         print("dc")
-        self.DATABASE = 'Data.db'
+        self.DATABASE = 'ideahouse.db'
         self._create_db_tables()
         c = self._get_db().cursor()
 
@@ -166,7 +166,7 @@ class Data_Collectaion():
             print(u)
 
     def _get_db(self):
-        db = g.get('_database2', None)
+        db = g.get('_database', None)
         print('Anden {}'.format(db))
         if db is None:
             db = g._databdase = sqlite3.connect(self.DATABASE)
@@ -190,11 +190,20 @@ class Data_Collectaion():
         except Exception as e:
             print(e)
 
+        # try:
+        #     c.execute("""CREATE TABLE UserProfiles (
+        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #         username TEXT,
+        #         email TEXT,
+        #         password TEXT);""")
+        # except Exception as e:
+        #     print(e)
+
         db.commit()
         return 'Database tables created'
 
     def close_connection(self):
-        db = getattr(g, '_database2', None)
+        db = getattr(g, '_database', None)
         if db is not None:
             db.close()
 
@@ -208,17 +217,18 @@ class Data_Collectaion():
         db = self._get_db()
         c = db.cursor()
         if dataid is not None:
-            c.execute("SELECT Data FROM data WHERE id = ?", (dataid,))
+            c.execute("SELECT userid FROM data WHERE id = ?", (dataid,))
             t = c.fetchone()
-            print("Data er: {}".format(t[0]))
+            print("Data_list er: {}".format(t[0]))
             # print(t)
-            c.execute("""SELECT Data.id, data, timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE data LIKE ?""", (t[0],))
+            c.execute("""SELECT Data.id, Data.data, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""", (t[0],))
         else:
-            c.execute("""SELECT Data.id, data, timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE userid = ?""",(userid,))
+            c.execute("""SELECT Data.id, Data.data, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""",(userid,))
         data_list = []
         q = 1
         for i in c:
             q = q =+ 1
+            print(q)
             data_list.append({'id':i[0], 'text':i[1], 'date':i[2], 'user': i[3]})
             print('Data listen er i {} gennemløb'.format(t))
         return data_list
