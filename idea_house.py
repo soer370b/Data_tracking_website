@@ -5,19 +5,22 @@ from flask import render_template
 from flask import session
 from flask import redirect
 from flask import url_for
+import io
 import matplotlib.pyplot as plt
 
 
-from idea_datalayer import IdeaData
+from idea_datalayer import IdeaData, Data_Collectaion
 
 app = Flask(__name__)
 app.secret_key = 'very secret string'
 
 data = None
+data_from_data = None
 
 @app.teardown_appcontext
 def close_connection(exception):
     data.close_connection()
+    data_from_data.close_connection()
 
 """
 Denne funktion sørger for at pakke den template, der skal vises,
@@ -134,6 +137,34 @@ def login_user():
         session.pop('currentuser', None)
         return my_render('login.html', success = False)
 
+#Tilføjelse af måledata i DATABASE!
+@app.route('/opret_data')
+def opret_data():
+    return my_render('opret_data.html', titel='opret data')
+
+@app.route("/nydata", methods=['POST'])
+def nydata():
+    text = request.form['data']
+    userid = get_user_id()
+    data_from_data.register_new_data(text, userid)
+    print('Data som bliver gemt: {}'.format(text))
+    return redirect("/visdata")
+
+@app.route("/visdata", methods=['GET'])
+def visdata():
+    if 'currentuser' in session:
+        data_from_data = Data_Collectaion()
+        id = get_user_id()
+        print(id)
+        if 'id' in request.args:
+            data_from_data = data_from_data.get_data_list(session['currentuser'], id, dataid = request.args['id'])
+        else:
+            data_from_data = data_from_data.get_data_list(session['currentuser'], id)
+    else:
+        data_from_data = []
+    print(data_from_data)
+    return my_render("vis_data.html", data = data_from_data)
+
 @app.route('/fig/<figure_key>')
 def fig(figure_key):
     plt.title(figure_key)
@@ -143,9 +174,13 @@ def fig(figure_key):
     img.seek(0)
     return send_file(img, mimetype='image/png')
 
-
 if __name__ == "__main__":
+    print('Hello World')
     with app.app_context():
         data = IdeaData()
+        print('data print: {}'.format(data))
+        data_from_data = Data_Collectaion()
+        print('data_from_data print: {}'.format(data_from_data))
+
 
     app.run(debug=True)

@@ -4,6 +4,7 @@ import sqlite3
 class IdeaData():
 
     def __init__(self):
+        print("id")
         self.DATABASE = 'ideahouse.db'
 
         self._create_db_tables()
@@ -41,6 +42,7 @@ class IdeaData():
             c.execute("SELECT idea FROM Ideas WHERE id = ?", ideaid)
             t = c.fetchone()
             print("Idéen er: {}".format(t[0]))
+            print(t)
             c.execute("""SELECT Ideas.id, idea, timestamp, UserProfiles.username FROM Ideas JOIN UserProfiles ON Ideas.userid = UserProfiles.id WHERE idea LIKE ?""", (t[0],))
         else:
             c.execute("""SELECT Ideas.id, idea, timestamp, UserProfiles.username FROM Ideas JOIN UserProfiles ON Ideas.userid = UserProfiles.id WHERE userid = ?""",(userid,))
@@ -115,8 +117,6 @@ class IdeaData():
             return False
         return db_pw == pw
 
-
-
     def _create_db_tables(self):
         db = self._get_db()
         #try:
@@ -143,5 +143,102 @@ class IdeaData():
         except Exception as e:
             print(e)
 
+        # try:
+        #     c.execute("""CREATE TABLE Data (
+        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #         userid INTEGER,
+        #         data TEXT,
+        #         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);""")
+        # except Exception as e:
+        #     print(e)
+
         db.commit()
         return 'Database tables created'
+    #Funktion som laver string om til en datatype
+    def tryeval(val):
+      try:
+        val = ast.literal_eval(val)
+      except ValueError:
+        pass
+      return val
+
+class Data_Collectaion():
+
+    def __init__(self):
+        print("dc")
+        self.DATABASE = 'ideahouse.db'
+        self._create_db_tables()
+        c = self._get_db().cursor()
+
+        c.execute('SELECT * FROM UserProfiles;')
+        print('Data database')
+        for u in c:
+            print(u)
+
+    def _get_db(self):
+        db = g.get('_database', None)
+        print('Anden {}'.format(db))
+        if db is None:
+            db = g._databdase = sqlite3.connect(self.DATABASE)
+            print(db)
+        return db
+
+    def _create_db_tables(self):
+        db = self._get_db()
+        #try:
+        #    db.execute("DROP TABLE IF EXISTS Ideas;")
+        #    db.commit()
+        #except:
+        #    print('Fejl ved sletning af tabeller.')
+        c = db.cursor()
+        try:
+            c.execute("""CREATE TABLE Data (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                userid INTEGER,
+                data TEXT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);""")
+        except Exception as e:
+            print(e)
+
+        # try:
+        #     c.execute("""CREATE TABLE UserProfiles (
+        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #         username TEXT,
+        #         email TEXT,
+        #         password TEXT);""")
+        # except Exception as e:
+        #     print(e)
+
+        db.commit()
+        return 'Database tables created'
+
+    def close_connection(self):
+        db = getattr(g, '_database', None)
+        if db is not None:
+            db.close()
+
+    def register_new_data(self, data, id):
+        db = self._get_db()
+        c = db.cursor()
+        c.execute("""INSERT INTO DATA (data, userid) VALUES (?, ?);""",(data, id))
+        db.commit()
+
+    def get_data_list(self, userid, dataid = None):
+        db = self._get_db()
+        c = db.cursor()
+        if dataid is not None:
+            c.execute("SELECT userid FROM data WHERE id = ?", (dataid,))
+            t = c.fetchone()
+            print("Data_list er: {}".format(t[0]))
+            # print(t)
+            c.execute("""SELECT Data.id, Data.data, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""", (t[0],))
+        else:
+            c.execute("""SELECT Data.id, Data.data, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""",(userid,))
+        data_list = []
+        q = 1
+        for i in c:
+            q = q =+ 1
+            print(q)
+            data_list.append({'id':i[0], 'text':i[1], 'date':i[2], 'user': i[3]})
+            print('Data listen er i {} gennemløb'.format(t))
+        return data_list
