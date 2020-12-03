@@ -143,10 +143,11 @@ def opret_data():
 
 @app.route("/nydata", methods=['POST'])
 def nydata():
-    text = request.form['navn_paa_data']
+    npd = request.form['navn_paa_data']
+    dsso = request.form['vaerdi_paa_data']
     userid = get_user_id()
-    data_from_data.register_new_data(text, userid)
-    print('Data som bliver gemt: {}'.format(text))
+    data_from_data.register_new_data(npd, userid)
+    print('Data som bliver gemt: {} og tallet er: {}'.format(npd, dsso))
     return redirect("/visdata")
 
 @app.route("/visdata", methods=['GET'])
@@ -173,9 +174,12 @@ def fig(figure_key):
     img.seek(0)
     return send_file(img, mimetype='image/png')
 
-@app.route("/indseat_maaledata", methods=['GET'])
+@app.route("/indseat_maaledata", methods=['POST', 'GET'])
 def indseat_maaledata():
-    return my_render('indsaet_maaling', title = 'Indsæt måling')
+    npd = 'dette er en test af vores crap'
+    dsso = request.form['dsso']
+    print(dsso)
+    return my_render('indsaet_maaling.html', title = 'Indtast måling', test = npd)
 
 if __name__ == "__main__":
     print('Hello World')
