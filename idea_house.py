@@ -8,6 +8,16 @@ from flask import url_for
 import io
 import matplotlib.pyplot as plt
 
+################# import mac files #################
+# import os
+#
+# dirname = os.path.dirname(__file__)
+#
+# filename = os.path.join(dirname,"relative/path/to/file/you/want")
+#
+# infile = open(filename, mode='r', encoding="utf8")
+#####################################################
+
 
 from idea_datalayer import IdeaData, Data_Collectaion
 
