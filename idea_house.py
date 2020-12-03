@@ -17,7 +17,9 @@ import matplotlib.pyplot as plt
 #
 # infile = open(filename, mode='r', encoding="utf8")
 #####################################################
-
+##################DISCORD COLOUR#####################
+                     #7289da
+#####################################################
 
 from idea_datalayer import IdeaData, Data_Collectaion
 
