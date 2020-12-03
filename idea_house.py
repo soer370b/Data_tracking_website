@@ -49,7 +49,6 @@ def get_user_id():
 def home():
     return my_render('home.html')
 
-
 @app.route("/nyide", methods=['POST'])
 def nyide():
     text = request.form['idea']
@@ -144,7 +143,7 @@ def opret_data():
 
 @app.route("/nydata", methods=['POST'])
 def nydata():
-    text = request.form['data']
+    text = request.form['navn_paa_data']
     userid = get_user_id()
     data_from_data.register_new_data(text, userid)
     print('Data som bliver gemt: {}'.format(text))
@@ -173,6 +172,10 @@ def fig(figure_key):
     plt.savefig(img)
     img.seek(0)
     return send_file(img, mimetype='image/png')
+
+@app.route("/indseat_maaledata", methods=['GET'])
+def indseat_maaledata():
+    return my_render('indsaet_maaling', title = 'Indsæt måling')
 
 if __name__ == "__main__":
     print('Hello World')
