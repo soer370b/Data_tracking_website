@@ -143,6 +143,16 @@ class IdeaData():
         except Exception as e:
             print(e)
 
+        try:
+            c.execute("""CREATE TABLE Data (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                userid INTEGER,
+                data INTEGER,
+                tal FLOAT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);""")
+        except  Exception as e:
+            print(e)
+
         # try:
         #     c.execute("""CREATE TABLE Data (
         #         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -195,7 +205,8 @@ class Data_Collectaion():
             c.execute("""CREATE TABLE Data (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 userid INTEGER,
-                data TEXT,
+                data INTEGER,
+                tal FLOAT,
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);""")
         except Exception as e:
             print(e)
@@ -217,10 +228,10 @@ class Data_Collectaion():
         if db is not None:
             db.close()
 
-    def register_new_data(self, data, id):
+    def register_new_data(self, data, tal, id):
         db = self._get_db()
         c = db.cursor()
-        c.execute("""INSERT INTO DATA (data, userid) VALUES (?, ?);""",(data, id))
+        c.execute("""INSERT INTO DATA (data, tal, userid) VALUES (?, ?, ?);""",(data, tal, id))
         db.commit()
 
     def get_data_list(self, userid, dataid = None):
@@ -231,14 +242,14 @@ class Data_Collectaion():
             t = c.fetchone()
             print("Data_list er: {}".format(t[0]))
             # print(t)
-            c.execute("""SELECT Data.id, Data.data, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""", (t[0],))
+            c.execute("""SELECT Data.id, Data.data, Data.tal, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""", (t[0],))
         else:
-            c.execute("""SELECT Data.id, Data.data, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""",(userid,))
+            c.execute("""SELECT Data.id, Data.data, Data.tal, Data.timestamp, UserProfiles.username FROM Data JOIN UserProfiles ON Data.userid = UserProfiles.id WHERE Data.userid = ?""",(userid,))
         data_list = []
         q = 1
         for i in c:
             q = q =+ 1
             print(q)
-            data_list.append({'id':i[0], 'text':i[1], 'date':i[2], 'user': i[3]})
+            data_list.append({'id':i[0], 'text':i[1], 'tal':i[2], 'date':i[3], 'user': i[4]})
             print('Data listen er i {} gennemløb'.format(t))
         return data_list

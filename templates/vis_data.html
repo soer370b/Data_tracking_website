@@ -8,7 +8,7 @@
     <div class="media-body">
       <small class="text-muted">{{ i['date'] }}</small>
       <p class="article-content">
-        {{ i['text'] }}
+        {{ i['text'] }} enhed {{i['tal']}} <!-- Her skal der laves et dynamisk stykke kode, der kan indsætte brugerens specielle input. -->
       </p>
       <form class="form-control" action="visdata" method="get">
           <button class="form-control" name="id" value="{{ i['id'] }}" type="submit">Se mere</button>

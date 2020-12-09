@@ -146,7 +146,7 @@ def nydata():
     npd = request.form['navn_paa_data']
     dsso = request.form['vaerdi_paa_data']
     userid = get_user_id()
-    data_from_data.register_new_data(npd, userid)
+    data_from_data.register_new_data(npd, dsso, userid)
     print('Data som bliver gemt: {} og tallet er: {}'.format(npd, dsso))
     return redirect("/visdata")
 
@@ -162,8 +162,9 @@ def visdata():
             data_from_data = data_from_data.get_data_list(session['currentuser'], id)
     else:
         data_from_data = []
-    print(data_from_data)
-    return my_render("vis_data.html", data = data_from_data)
+    tal = 4
+    print(data_from_data, tal)
+    return my_render("vis_data.html", data = data_from_data, tal=tal)
 
 @app.route('/fig/<figure_key>')
 def fig(figure_key):
@@ -174,14 +175,21 @@ def fig(figure_key):
     img.seek(0)
     return send_file(img, mimetype='image/png')
 
-@app.route("/indseat_maaledata", methods=['POST', 'GET'])
-def indseat_maaledata():
+@app.route('/indseat_maaledata', methods=['GET', 'POST'])
+def test():
     npd = 'dette er en test af vores crap'
+    return my_render('indsaet_maaling.html', test=npd)
+
+@app.route('/gem_maaledata', methods=['POST', 'GET'])
+def save_indseat_maaledata():
+    # npd = 'dette er en test af vores crap'
     dsso = request.form['dsso']
     print(dsso)
-    return my_render('indsaet_maaling.html', title = 'Indtast måling', test = npd)
-    #Her skal der laves en rute der redrecter til en nadne side, så at man kan dende al dataen til serveren.
+    redirect('/indseat_maaledata')
+    # return my_render('indsaet_maaling.html', title = 'Indtast måling', test = npd)
+    #Her skal der laves en rute der redrecter til en anden side, så at man kan dende al dataen til serveren.
     #redirect eventuelt til den samme side.
+    #Denne side sender data til databasen, det er i hvert fald det den skal når den er færdig.
 
 if __name__ == "__main__":
     print('Hello World')
