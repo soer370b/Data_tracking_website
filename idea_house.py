@@ -56,11 +56,16 @@ def get_user_id():
     else:
         return -1
 
+
 @app.route("/")
 @app.route("/home")
 def home():
     return my_render('home.html')
+    #return redirect('visdata')
 
+@app.route("/test_thomas")
+def test_thomas():
+    return my_render('test_thomas.html')
 
 @app.route("/nyide", methods=['POST'])
 def nyide():
@@ -93,7 +98,6 @@ def login():
 def logout():
     session.pop('currentuser', None)
     return my_render('home.html')
-
 
 @app.route("/about")
 def about():
