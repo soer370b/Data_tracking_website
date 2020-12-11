@@ -253,3 +253,6 @@ class Data_Collectaion():
             data_list.append({'id':i[0], 'text':i[1], 'tal':i[2], 'date':i[3], 'user': i[4]})
             print('Data listen er i {} gennemløb'.format(t))
         return data_list
+
+    def get_data_values(self, npd):
+        print('Test 2' + npd)
