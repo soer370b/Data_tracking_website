@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if loggedin == True %}
+<div class="form-group">
+  <form class="form-control" action="/gem_maaledata?id={{test}}" method="post">
+    <label class="form-control-static" for="text">Det du måler:</label>
+    <label class="form-control-static" for="text">{{test}}</label>
+    <br><br>
+    <label for="from-control-static" for='text'>Indtast din måling:</label>
+    <input type="text" id="dsso" name="dsso"><br><br>
+    <!-- <textarea class="form-control" rows="5" id="text" name="data"></textarea> -->
+    <button class="form-control" type="submit" name="button">Send</button>
+  </form>
+</div>
+{% endif %}
+{% endblock content %}

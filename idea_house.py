@@ -16,6 +16,7 @@ app.secret_key = 'very secret string'
 
 data = None
 data_from_data = None
+npd = None
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -48,7 +49,6 @@ def get_user_id():
 @app.route("/home")
 def home():
     return my_render('home.html')
-
 
 @app.route("/nyide", methods=['POST'])
 def nyide():
@@ -144,10 +144,11 @@ def opret_data():
 
 @app.route("/nydata", methods=['POST'])
 def nydata():
-    text = request.form['data']
+    npd = request.form['navn_paa_data']
+    dsso = request.form['vaerdi_paa_data']
     userid = get_user_id()
-    data_from_data.register_new_data(text, userid)
-    print('Data som bliver gemt: {}'.format(text))
+    data_from_data.register_new_data(npd, dsso, userid)
+    print('Data som bliver gemt: {} og tallet er: {}'.format(npd, dsso))
     return redirect("/visdata")
 
 @app.route("/visdata", methods=['GET'])
@@ -162,8 +163,9 @@ def visdata():
             data_from_data = data_from_data.get_data_list(session['currentuser'], id)
     else:
         data_from_data = []
-    print(data_from_data)
-    return my_render("vis_data.html", data = data_from_data)
+    tal = 4
+    print(data_from_data, tal)
+    return my_render("vis_data.html", data = data_from_data, tal=tal)
 
 @app.route('/fig/<figure_key>')
 def fig(figure_key):
@@ -173,6 +175,29 @@ def fig(figure_key):
     plt.savefig(img)
     img.seek(0)
     return send_file(img, mimetype='image/png')
+
+@app.route('/indseat_maaledata/bestemmelse', methods=['GET', 'POST'])
+def bestemmelse():
+    return my_render('indsaet_maaling_bestemmelse.html')
+
+@app.route('/indseat_maaledata', methods=['GET', 'POST'])
+def test():
+    npd = request.form['npd']
+    Data = Data_Collectaion()
+    Data.get_data_values(npd)
+    return my_render('indsaet_maaling.html', test=npd)
+#save_indseat_maaledata(): funktionen firker ikke helt
+@app.route('/gem_maaledata', methods=['POST', 'GET'])
+def save_indseat_maaledata():
+    npd = request.args['test']
+    print(npd)
+    # dsso = request.form['dsso']
+    # print(dsso)
+    redirect('/indseat_maaledata')
+    # return my_render('indsaet_maaling.html', title = 'Indtast måling', test = npd)
+    #Her skal der laves en rute der redrecter til en anden side, så at man kan dende al dataen til serveren.
+    #redirect eventuelt til den samme side.
+    #Denne side sender data til databasen, det er i hvert fald det den skal når den er færdig.
 
 if __name__ == "__main__":
     print('Hello World')
