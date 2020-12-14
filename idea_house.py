@@ -148,7 +148,7 @@ def login_user():
     if login_success(user, pw):
         #Create user object, store in session.
         session['currentuser'] = data.get_user_id(user)
-        return my_render('home.html')
+        return redirect('/')
     else:
         session.pop('currentuser', None)
         return my_render('login.html', success = False)
