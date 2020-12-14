@@ -97,7 +97,7 @@ def login():
 @app.route("/logout")
 def logout():
     session.pop('currentuser', None)
-    return my_render('home.html')
+    return redirect('/')
 
 @app.route("/about")
 def about():
